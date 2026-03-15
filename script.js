@@ -144,7 +144,9 @@ function defaultUserData() {
     monthlyPoints:  0,
     completedToday: [],   // array of chore IDs
     lastDate:       null,
-    lastMonth:      null
+    lastMonth:      null,
+    streak:         0,    // how many days in a row they completed at least one chore
+    lastStreakDate: null  // the last date a chore was completed (for streak calc)
   };
 }
 
@@ -184,7 +186,19 @@ let dailyResetHappened = false;
 USER_KEYS.forEach(key => {
   let u = userData[key];
   if (u.lastDate !== today) {
-    if (u.lastDate !== null) dailyResetHappened = true;  // Not first-ever load
+    if (u.lastDate !== null) {
+      dailyResetHappened = true;  // Not first-ever load
+      // Check streak: did they do any chores yesterday?
+      let yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      let yesterdayStr = yesterday.toDateString();
+      if (u.lastStreakDate === u.lastDate && u.lastDate === yesterdayStr) {
+        // They completed a chore yesterday — streak continues
+      } else if (u.lastStreakDate !== u.lastDate) {
+        // They didn't complete any chore yesterday — reset streak
+        u.streak = 0;
+      }
+    }
     u.completedToday = [];
     u.lastDate = today;
   }
@@ -302,6 +316,50 @@ function getRank(points) {
   return RANKS[0];
 }
 
+// =============================================
+// CONFETTI 🎉
+// Launches a burst of colourful particles from
+// the centre of the screen when a chore is ticked.
+// Pure JS + CSS — no library needed.
+// =============================================
+function launchConfetti() {
+  const colours = ["#2563eb", "#3b82f6", "#60a5fa", "#ffffff", "#fbbf24", "#34d399", "#f472b6"];
+  const count   = 48;
+
+  for (let i = 0; i < count; i++) {
+    let el = document.createElement("div");
+    el.className = "confetti-piece";
+
+    // Random size between 7–14 px
+    let size = 7 + Math.random() * 7;
+    // Random angle and distance to fly
+    let angle    = Math.random() * 360;
+    let distance = 80 + Math.random() * 140;
+    let dx = Math.cos(angle * Math.PI / 180) * distance;
+    let dy = Math.sin(angle * Math.PI / 180) * distance - 80; // bias upward
+    let rotation = (Math.random() - 0.5) * 720;
+    let colour   = colours[Math.floor(Math.random() * colours.length)];
+    let shape    = Math.random() > 0.4 ? "50%" : "0%"; // circle or square
+    let duration = 0.6 + Math.random() * 0.5;
+
+    Object.assign(el.style, {
+      width:            size + "px",
+      height:           size + "px",
+      background:       colour,
+      borderRadius:     shape,
+      "--dx":           dx + "px",
+      "--dy":           dy + "px",
+      "--rot":          rotation + "deg",
+      animationDuration: duration + "s",
+    });
+
+    document.body.appendChild(el);
+    // Remove after animation finishes
+    setTimeout(() => el.remove(), duration * 1000 + 100);
+  }
+}
+
+
 function updateHero() {
   let u     = userData[currentUser];
   let rank  = getRank(u.totalPoints);
@@ -334,7 +392,7 @@ function updateHero() {
   let monthName = now.toLocaleString("default", { month: "long", year: "numeric" });
   document.getElementById("monthly-month").textContent = monthName;
 
-  // Progress bar
+  // Progress bar (rank)
   let fill      = document.getElementById("rank-progress-fill");
   let label     = document.getElementById("rank-next");
   let isMaxRank = rankIndex === RANKS.length - 1;
@@ -349,6 +407,42 @@ function updateHero() {
     let percent  = Math.min(100, Math.round((progress / range) * 100));
     fill.style.width  = percent + "%";
     label.textContent = (next.minPoints - u.totalPoints) + " pts to " + next.name;
+  }
+
+  // 🔥 Streak
+  let streakEl = document.getElementById("streak-display");
+  if (streakEl) {
+    let s = u.streak || 0;
+    if (s >= 2) {
+      streakEl.textContent = "🔥 " + s + " day streak!";
+      streakEl.style.display = "block";
+    } else if (s === 1) {
+      streakEl.textContent = "🔥 1 day streak — keep it going!";
+      streakEl.style.display = "block";
+    } else {
+      streakEl.style.display = "none";
+    }
+  }
+
+  // ✅ Daily progress bar
+  let doneToday  = u.completedToday.length;
+  let totalChores = chores.length;
+  let dailyBar   = document.getElementById("daily-progress-fill");
+  let dailyLabel = document.getElementById("daily-progress-label");
+
+  if (dailyBar && dailyLabel) {
+    if (totalChores === 0) {
+      dailyBar.style.width   = "0%";
+      dailyLabel.textContent = "Add some chores to get started!";
+    } else {
+      let pct = Math.round((doneToday / totalChores) * 100);
+      dailyBar.style.width   = pct + "%";
+      if (doneToday === totalChores) {
+        dailyLabel.textContent = "🎉 All done for today!";
+      } else {
+        dailyLabel.textContent = doneToday + " of " + totalChores + " chores done today";
+      }
+    }
   }
 }
 
@@ -490,19 +584,25 @@ function toggleChore(id) {
   let chore = chores.find(c => c.id === id);
   if (!chore) return;
 
-  // Check if this user has already done this chore today
   let alreadyDone = u.completedToday.includes(id);
 
   if (alreadyDone) {
-    // Un-check: remove from completedToday and subtract points
     u.completedToday  = u.completedToday.filter(x => x !== id);
     u.totalPoints    -= chore.points;
     u.monthlyPoints  -= chore.points;
   } else {
-    // Check: add to completedToday and add points
     u.completedToday.push(id);
     u.totalPoints   += chore.points;
     u.monthlyPoints += chore.points;
+
+    // Streak: if this is their first chore today, increment streak
+    if (u.lastStreakDate !== today) {
+      u.streak = (u.streak || 0) + 1;
+      u.lastStreakDate = today;
+    }
+
+    // 🎉 Confetti!
+    launchConfetti();
   }
 
   saveData();
