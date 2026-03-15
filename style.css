@@ -720,39 +720,6 @@ body {
 }
 
 
-/* ======================
-   CONFETTI 🎉
-   Each piece is absolutely positioned at the
-   centre of the screen, then flung outward via
-   CSS custom properties set by JavaScript.
-   ====================== */
-.confetti-piece {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 9999;
-  animation: confetti-fly var(--dur, 0.8s) ease-out forwards;
-}
-
-@keyframes confetti-fly {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    transform:
-      translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
-      rotate(var(--rot))
-      scale(0.3);
-    opacity: 0;
-  }
-}
-
 
 /* ======================
    STREAK DISPLAY 🔥

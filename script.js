@@ -316,48 +316,6 @@ function getRank(points) {
   return RANKS[0];
 }
 
-// =============================================
-// CONFETTI 🎉
-// Launches a burst of colourful particles from
-// the centre of the screen when a chore is ticked.
-// Pure JS + CSS — no library needed.
-// =============================================
-function launchConfetti() {
-  const colours = ["#2563eb", "#3b82f6", "#60a5fa", "#ffffff", "#fbbf24", "#34d399", "#f472b6"];
-  const count   = 180;
-
-  for (let i = 0; i < count; i++) {
-    let el = document.createElement("div");
-    el.className = "confetti-piece";
-
-    let size     = 10 + Math.random() * 12;
-    let screenW  = window.innerWidth;
-    let screenH  = window.innerHeight;
-    // Spread pieces across the full screen
-    let dx       = (Math.random() - 0.5) * screenW * 1.4;
-    let dy       = (Math.random() - 0.5) * screenH * 1.4 - screenH * 0.3;
-    let rotation = (Math.random() - 0.5) * 1440;
-    let colour   = colours[Math.floor(Math.random() * colours.length)];
-    let shape    = Math.random() > 0.4 ? "50%" : "0%";
-    let duration = 1.0 + Math.random() * 1.0;
-
-    Object.assign(el.style, {
-      width:            size + "px",
-      height:           size + "px",
-      background:       colour,
-      borderRadius:     shape,
-      "--dx":           dx + "px",
-      "--dy":           dy + "px",
-      "--rot":          rotation + "deg",
-      animationDuration: duration + "s",
-    });
-
-    document.body.appendChild(el);
-    // Remove after animation finishes
-    setTimeout(() => el.remove(), duration * 1000 + 100);
-  }
-}
-
 
 function updateHero() {
   let u     = userData[currentUser];
@@ -599,9 +557,6 @@ function toggleChore(id) {
       u.streak = (u.streak || 0) + 1;
       u.lastStreakDate = today;
     }
-
-    // 🎉 Confetti!
-    launchConfetti();
   }
 
   saveData();
