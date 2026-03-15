@@ -1,0 +1,754 @@
+/* =============================================
+   STYLE.CSS — Black, blue & white
+   ============================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000000;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 480px;
+  padding-bottom: 48px;
+}
+
+
+/* ======================
+   CHORE DRAWER
+   Slides in from the left. Uses CSS transform to
+   hide/show it — transform: translateX(-100%) pushes
+   it fully off screen to the left.
+   ====================== */
+.drawer {
+  position: fixed;          /* Stays in place even when you scroll */
+  top: 0;
+  left: 0;
+  height: 100vh;            /* Full screen height */
+  width: 300px;
+  background: #0a0a0a;
+  border-right: 1px solid #1e1e1e;
+  transform: translateX(-100%);   /* Hidden: moved off-screen left */
+  transition: transform 0.3s ease;
+  z-index: 200;             /* Sits above everything else */
+  display: flex;
+  flex-direction: column;   /* Stack header / body / footer vertically */
+  overflow: hidden;         /* Children handle their own scrolling */
+}
+
+/* Scrollable middle section — grows to fill space between header & footer */
+.drawer-body {
+  flex: 1;                  /* Take all available vertical space */
+  overflow-y: auto;         /* Scroll when chores overflow */
+}
+
+/* Add-chore section pinned to the bottom */
+.drawer-footer {
+  flex-shrink: 0;           /* Never shrink — always visible */
+  border-top: 1px solid #1a1a1a;
+}
+
+/* The toggle button inside the footer */
+.drawer-footer-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 15px 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.drawer-footer-toggle:hover {
+  color: #ffffff;
+}
+
+/* When JavaScript adds the "open" class, slide into view */
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #1e1e1e;
+  position: sticky;         /* Stays at the top when the list scrolls */
+  top: 0;
+  background: #0a0a0a;
+}
+
+.drawer-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.drawer-close {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.drawer-close:hover {
+  color: #ffffff;
+}
+
+/* Dark overlay behind the open drawer */
+.backdrop {
+  position: fixed;
+  inset: 0;                 /* Shorthand for top/right/bottom/left: 0 */
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;     /* Can't click it when invisible */
+  transition: opacity 0.3s;
+}
+
+.backdrop.open {
+  opacity: 1;
+  pointer-events: all;      /* Clickable to close the drawer */
+}
+
+
+/* ======================
+   TOP BAR
+   ====================== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  background: #000000;
+  z-index: 10;
+  border-bottom: 1px solid #111111;
+}
+
+/* User switcher — two pill tabs in the center of the topbar */
+.user-switcher {
+  display: flex;
+  gap: 2px;
+  background: #111111;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.user-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.3px;
+}
+
+/* The active (selected) user gets a blue highlight */
+.user-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.user-btn:not(.active):hover {
+  color: #ffffff;
+}
+
+/* Matches the width of the hamburger so the switcher stays centered */
+.topbar-spacer {
+  width: 40px;
+}
+
+/* The 3-line hamburger button */
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.hamburger:hover {
+  background: #111111;
+}
+
+/* Each line of the hamburger icon */
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+
+/* ======================
+   HERO SECTION
+   All-time rank and total points
+   ====================== */
+.hero {
+  padding: 48px 32px 40px;
+  text-align: center;
+  /* Background shifts subtly per rank — set by JavaScript */
+  background: #050505;
+  transition: background 0.8s ease;
+  border-bottom: 1px solid #111111;
+}
+
+/* User name label at the top of the hero card */
+.hero-user-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 22px;
+}
+
+.hero-icon {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+}
+
+.hero-icon svg {
+  width: 100%;
+  height: 100%;
+  /* "color" here feeds into fill="currentColor" in the SVG */
+  color: #2563eb;
+  filter: drop-shadow(0 0 14px rgba(37, 99, 235, 0.5));
+  transition: color 0.6s ease, filter 0.6s ease;
+}
+
+.hero-rank-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.hero-points {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 28px;
+  letter-spacing: -3px;
+  color: #ffffff;
+}
+
+.pts-label {
+  font-size: 1.3rem;
+  font-weight: 300;
+  opacity: 0.3;
+  letter-spacing: 0;
+}
+
+.progress-track {
+  background: #111111;
+  border-radius: 999px;
+  height: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* The blue bar that fills up as you earn points */
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #2563eb;
+  transition: width 0.6s ease;
+  width: 0%;
+}
+
+.progress-label {
+  font-size: 0.7rem;
+  color: #ffffff;
+  text-align: right;
+  letter-spacing: 0.3px;
+}
+
+
+/* ======================
+   ADD CHORE PANEL (inside drawer footer)
+   ====================== */
+.chevron {
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+  display: inline-block;
+  line-height: 1;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+.add-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 16px;
+}
+
+.add-panel.open {
+  max-height: 400px;
+  padding: 0 16px 16px;
+}
+
+
+/* ======================
+   MONTHLY TALLY CARD
+   Sits at the bottom — a dark card with a blue accent stripe
+   ====================== */
+.monthly-card {
+  margin: 24px 16px 0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-top: 2px solid #2563eb;   /* Blue stripe at top */
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.monthly-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.monthly-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #2563eb;
+}
+
+.monthly-month {
+  font-size: 0.75rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.monthly-points {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -2px;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.monthly-pts-label {
+  font-size: 1rem;
+  font-weight: 300;
+  color: #ffffff;
+  margin-left: 4px;
+}
+
+
+/* ======================
+   MONTHLY BATTLE CARD
+   Side-by-side comparison of both users for the current month
+   ====================== */
+.battle-card {
+  margin: 10px 16px 0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.battle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.battle-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #2563eb;
+}
+
+.battle-month {
+  font-size: 0.75rem;
+  color: #ffffff;
+}
+
+/* Two columns with a VS in the middle */
+.battle-grid {
+  display: grid;
+  grid-template-columns: 1fr 32px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.battle-user {
+  transition: opacity 0.3s;
+}
+
+/* Dim the losing side slightly */
+.battle-user.losing {
+  opacity: 0.45;
+}
+
+.battle-name {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+/* Winner's name turns white */
+.battle-user.winning .battle-name {
+  color: #ffffff;
+}
+
+.battle-pts {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.battle-bar-track {
+  background: #1a1a1a;
+  border-radius: 999px;
+  height: 3px;
+  overflow: hidden;
+}
+
+.battle-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #2563eb;
+  transition: width 0.6s ease;
+  width: 0%;
+}
+
+/* The winning user's bar is brighter */
+.battle-user.winning .battle-bar-fill {
+  background: #3b82f6;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+}
+
+.battle-vs {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #1f2937;
+  text-align: center;
+}
+
+/* Result line at the bottom of the battle card */
+.battle-result {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #111111;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.battle-result.leading {
+  color: #3b82f6;
+}
+
+.battle-result.tied {
+  color: #ffffff;
+}
+
+
+/* ======================
+   LAST MONTH HISTORY CARD
+   Shown once a month has ended
+   ====================== */
+.history-card {
+  margin: 10px 16px 0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.history-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #2563eb;
+  margin-bottom: 14px;
+}
+
+/* Each past month entry */
+.history-entry {
+  padding: 12px 0;
+  border-bottom: 1px solid #111111;
+}
+
+.history-entry:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.history-entry-month {
+  font-size: 0.72rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.history-scores {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.history-score {
+  font-size: 0.88rem;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* The winner's score is highlighted white */
+.history-score.winner {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.history-winner-line {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+
+/* ======================
+   INPUTS
+   ====================== */
+.text-input,
+.number-input {
+  display: block;
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 10px;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  background: #111111;
+  color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.text-input::placeholder,
+.number-input::placeholder {
+  color: #ffffff;
+}
+
+.text-input:focus,
+.number-input:focus {
+  border-color: #2563eb;
+}
+
+
+/* ======================
+   BUTTONS
+   ====================== */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-add {
+  background: #2563eb;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.btn-add:hover {
+  opacity: 0.85;
+}
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #1f2937;
+  margin: 16px 16px 0;
+  width: calc(100% - 32px);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.btn-reset:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+
+/* ======================
+   CHORE ITEMS (inside the drawer)
+   ====================== */
+#chore-list {
+  list-style: none;
+  flex: 1;
+}
+
+.chore-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid #111111;
+  gap: 13px;
+  transition: background 0.15s;
+}
+
+.chore-item:last-child {
+  border-bottom: none;
+}
+
+.chore-item:hover {
+  background: #111111;
+}
+
+.chore-item.done {
+  opacity: 0.35;
+}
+
+.chore-checkbox {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.chore-name {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+  font-weight: 400;
+}
+
+.chore-item.done .chore-name {
+  text-decoration: line-through;
+  color: #ffffff;
+}
+
+.chore-points-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  color: #1f2937;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 3px 5px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.btn-delete:hover {
+  color: #ef4444;
+}
+
+
+/* ======================
+   MISC
+   ====================== */
+.empty-message {
+  text-align: center;
+  color: #1f2937;
+  font-size: 0.85rem;
+  padding: 32px 20px;
+}
+
+
+
+/* ======================
+   STREAK DISPLAY 🔥
+   ====================== */
+.streak-display {
+  margin: 12px 16px 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f97316;
+  letter-spacing: 0.3px;
+  text-align: center;
+  animation: streak-pop 0.3s ease;
+}
+
+@keyframes streak-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.1); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+
+
+.daily-reset-notice {
+  margin: 12px 16px 0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-left: 2px solid #2563eb;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.82rem;
+}
