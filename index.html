@@ -75,9 +75,6 @@
       </div>
       <div class="progress-label" id="rank-next"></div>
 
-      <!-- 🔥 Streak counter — hidden until streak >= 1 -->
-      <div class="streak-display" id="streak-display" style="display:none;"></div>
-
       <!-- ✅ Daily progress bar -->
       <div class="daily-progress-section">
         <div class="daily-progress-track">
@@ -143,6 +140,9 @@
     </div>
 
     <button onclick="resetAll()" class="btn btn-reset">Reset Everything</button>
+
+    <!-- 🔥 Streak counter — hidden until streak >= 1 -->
+    <div class="streak-display" id="streak-display" style="display:none;"></div>
 
     <p id="daily-reset-notice" class="daily-reset-notice" style="display:none;">
       New day — chores reset. Points are safe.
