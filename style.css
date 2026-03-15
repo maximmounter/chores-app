@@ -187,30 +187,23 @@ body {
   width: 40px;
 }
 
-/* The 3-line hamburger button */
-.hamburger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 6px;
-  border-radius: 6px;
-  transition: background 0.15s;
-}
-
-.hamburger:hover {
+/* Chores button */
+.chores-btn {
   background: #111111;
+  border: 1px solid #1e1e1e;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 
-/* Each line of the hamburger icon */
-.hamburger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: #ffffff;
-  border-radius: 2px;
+.chores-btn:hover {
+  background: #1a1a1a;
+  border-color: #2563eb;
 }
 
 
