@@ -5,9 +5,6 @@
 // =============================================
 // FIREBASE
 // =============================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyD2B1cxH1c6RMN3UVRMvcA0CFR8ED7M44Q",
   authDomain: "maxim-chores-app.firebaseapp.com",
@@ -18,8 +15,8 @@ const firebaseConfig = {
   measurementId: "G-H4NNSBGEC5"
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const analytics  = getAnalytics(firebaseApp);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const analytics  = firebase.analytics();
 
 
 
