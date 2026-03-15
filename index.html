@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chores</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== CHORE DRAWER =====
+       Slides in from the left. Shows chores for the active user. -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawer-title">Chores</span>
+      <button class="drawer-close" onclick="toggleDrawer()">&#10005;</button>
+    </div>
+    <div class="drawer-body">
+      <ul id="chore-list"></ul>
+      <p id="empty-message" class="empty-message">No chores yet.</p>
+    </div>
+    <!-- Add chore pinned to the bottom of the drawer -->
+    <div class="drawer-footer">
+      <button class="drawer-footer-toggle" onclick="toggleAddForm()">
+        <span>+ Add a Chore</span>
+        <span class="chevron" id="add-chevron">&#8964;</span>
+      </button>
+      <div class="add-panel" id="add-panel">
+        <input type="text"   id="chore-name"   placeholder="Chore name"     class="text-input"   />
+        <input type="number" id="chore-points" placeholder="Points (1–100)"  class="number-input" min="1" max="100" />
+        <button onclick="addChore()" class="btn btn-add">Add Chore</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark backdrop — click to close drawer -->
+  <div class="backdrop" id="backdrop" onclick="toggleDrawer()"></div>
+
+
+  <!-- ===== MAIN APP ===== -->
+  <div class="app">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <!-- 3-line hamburger: opens the chore drawer -->
+      <button class="hamburger" onclick="toggleDrawer()" aria-label="Open chores">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- User switcher — two tab buttons, one per person -->
+      <!-- JavaScript marks the active one by adding the "active" CSS class -->
+      <div class="user-switcher">
+        <button class="user-btn" id="btn-maxim" onclick="switchUser('maxim')">Maxim</button>
+        <button class="user-btn" id="btn-maya"  onclick="switchUser('maya')">Maya</button>
+      </div>
+
+      <div class="topbar-spacer"></div>
+    </header>
+
+    <!-- ===== HERO =====
+         Shows the active user's name, rank badge, total points, and progress. -->
+    <div class="hero">
+      <!-- User's name at the top of the hero -->
+      <div class="hero-user-name" id="hero-user-name">Maxim</div>
+      <div class="hero-icon" id="rank-icon"></div>
+      <div class="hero-rank-name" id="rank-name">Rookie</div>
+      <div class="hero-points">
+        <span id="total-points">0</span>
+        <span class="pts-label">pts</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="rank-progress-fill"></div>
+      </div>
+      <div class="progress-label" id="rank-next"></div>
+    </div>
+
+    <!-- ===== MONTHLY TALLY (active user) ===== -->
+    <div class="monthly-card">
+      <div class="monthly-top">
+        <span class="monthly-label">THIS MONTH</span>
+        <span class="monthly-month" id="monthly-month"></span>
+      </div>
+      <div class="monthly-points">
+        <span id="monthly-points">0</span>
+        <span class="monthly-pts-label">pts</span>
+      </div>
+    </div>
+
+    <!-- ===== MONTHLY BATTLE =====
+         Side-by-side comparison of both users' points this month.
+         Bars grow relative to whoever is leading. -->
+    <div class="battle-card">
+      <div class="battle-header">
+        <span class="battle-label">MONTHLY BATTLE</span>
+        <span class="battle-month" id="battle-month"></span>
+      </div>
+
+      <div class="battle-grid">
+        <!-- Maxim's column -->
+        <div class="battle-user" id="battle-col-maxim">
+          <div class="battle-name">Maxim</div>
+          <div class="battle-pts" id="battle-pts-maxim">0</div>
+          <div class="battle-bar-track">
+            <div class="battle-bar-fill" id="battle-bar-maxim"></div>
+          </div>
+        </div>
+
+        <div class="battle-vs">VS</div>
+
+        <!-- Maya's column -->
+        <div class="battle-user" id="battle-col-maya">
+          <div class="battle-name">Maya</div>
+          <div class="battle-pts" id="battle-pts-maya">0</div>
+          <div class="battle-bar-track">
+            <div class="battle-bar-fill" id="battle-bar-maya"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Who's winning right now -->
+      <div class="battle-result" id="battle-result">No points yet this month</div>
+    </div>
+
+    <!-- ===== LAST MONTH RESULT =====
+         Only shown after a month has ended.
+         JavaScript populates this from saved history. -->
+    <div class="history-card" id="history-card" style="display:none;">
+      <div class="history-label">LAST MONTH</div>
+      <div id="history-content"></div>
+    </div>
+
+    <button onclick="resetAll()" class="btn btn-reset">Reset Everything</button>
+
+    <p id="daily-reset-notice" class="daily-reset-notice" style="display:none;">
+      New day — chores reset. Points are safe.
+    </p>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
