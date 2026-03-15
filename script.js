@@ -2,6 +2,28 @@
 // SCRIPT.JS
 // =============================================
 
+// =============================================
+// FIREBASE
+// =============================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD2B1cxH1c6RMN3UVRMvcA0CFR8ED7M44Q",
+  authDomain: "maxim-chores-app.firebaseapp.com",
+  projectId: "maxim-chores-app",
+  storageBucket: "maxim-chores-app.firebasestorage.app",
+  messagingSenderId: "276219421960",
+  appId: "1:276219421960:web:c1c914cc1947b0bf5ab8bd",
+  measurementId: "G-H4NNSBGEC5"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const analytics  = getAnalytics(firebaseApp);
+
+
+
+
 
 // =============================================
 // RANKS
