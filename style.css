@@ -233,7 +233,7 @@ body {
   font-weight: 700;
   letter-spacing: 6px;
   text-transform: uppercase;
-  color: #374151;
+  color: #9ca3af;
   margin-bottom: 22px;
 }
 
@@ -257,7 +257,7 @@ body {
   font-weight: 700;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #4b5563;
+  color: #9ca3af;
   margin-bottom: 10px;
 }
 
@@ -296,7 +296,7 @@ body {
 
 .progress-label {
   font-size: 0.7rem;
-  color: #374151;
+  color: #9ca3af;
   text-align: right;
   letter-spacing: 0.3px;
 }
@@ -350,7 +350,7 @@ body {
 }
 
 .monthly-label {
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 4px;
   color: #2563eb;
@@ -358,7 +358,7 @@ body {
 
 .monthly-month {
   font-size: 0.75rem;
-  color: #374151;
+  color: #9ca3af;
   letter-spacing: 0.5px;
 }
 
@@ -398,7 +398,7 @@ body {
 }
 
 .battle-label {
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 4px;
   color: #2563eb;
@@ -406,7 +406,7 @@ body {
 
 .battle-month {
   font-size: 0.75rem;
-  color: #374151;
+  color: #9ca3af;
 }
 
 /* Two columns with a VS in the middle */
@@ -432,7 +432,7 @@ body {
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #4b5563;
+  color: #9ca3af;
   margin-bottom: 5px;
 }
 
@@ -513,10 +513,10 @@ body {
 }
 
 .history-label {
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 4px;
-  color: #374151;
+  color: #2563eb;
   margin-bottom: 14px;
 }
 
@@ -533,7 +533,7 @@ body {
 
 .history-entry-month {
   font-size: 0.72rem;
-  color: #4b5563;
+  color: #9ca3af;
   margin-bottom: 8px;
   letter-spacing: 0.5px;
 }
@@ -546,7 +546,7 @@ body {
 
 .history-score {
   font-size: 0.88rem;
-  color: #4b5563;
+  color: #9ca3af;
   font-weight: 500;
 }
 
