@@ -381,6 +381,21 @@ function updateHero() {
     }
   }
 
+  // 🎯 Monthly goal (30 pts)
+  const MONTHLY_GOAL = 30;
+  let goalFill  = document.getElementById("goal-fill");
+  let goalLabel = document.getElementById("goal-label");
+  if (goalFill && goalLabel) {
+    let pct     = Math.min(100, Math.round((u.monthlyPoints / MONTHLY_GOAL) * 100));
+    let reached = u.monthlyPoints >= MONTHLY_GOAL;
+    goalFill.style.width      = pct + "%";
+    goalFill.style.background = reached ? "#22c55e" : "#2563eb";
+    goalLabel.textContent     = reached
+      ? "🎉 Monthly goal reached!"
+      : (MONTHLY_GOAL - u.monthlyPoints) + " pts to reach this month's goal";
+    goalLabel.style.color     = reached ? "#22c55e" : "#ffffff";
+  }
+
 }
 
 
