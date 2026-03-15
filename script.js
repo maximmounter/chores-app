@@ -324,23 +324,22 @@ function getRank(points) {
 // =============================================
 function launchConfetti() {
   const colours = ["#2563eb", "#3b82f6", "#60a5fa", "#ffffff", "#fbbf24", "#34d399", "#f472b6"];
-  const count   = 48;
+  const count   = 180;
 
   for (let i = 0; i < count; i++) {
     let el = document.createElement("div");
     el.className = "confetti-piece";
 
-    // Random size between 7–14 px
-    let size = 7 + Math.random() * 7;
-    // Random angle and distance to fly
-    let angle    = Math.random() * 360;
-    let distance = 80 + Math.random() * 140;
-    let dx = Math.cos(angle * Math.PI / 180) * distance;
-    let dy = Math.sin(angle * Math.PI / 180) * distance - 80; // bias upward
-    let rotation = (Math.random() - 0.5) * 720;
+    let size     = 10 + Math.random() * 12;
+    let screenW  = window.innerWidth;
+    let screenH  = window.innerHeight;
+    // Spread pieces across the full screen
+    let dx       = (Math.random() - 0.5) * screenW * 1.4;
+    let dy       = (Math.random() - 0.5) * screenH * 1.4 - screenH * 0.3;
+    let rotation = (Math.random() - 0.5) * 1440;
     let colour   = colours[Math.floor(Math.random() * colours.length)];
-    let shape    = Math.random() > 0.4 ? "50%" : "0%"; // circle or square
-    let duration = 0.6 + Math.random() * 0.5;
+    let shape    = Math.random() > 0.4 ? "50%" : "0%";
+    let duration = 1.0 + Math.random() * 1.0;
 
     Object.assign(el.style, {
       width:            size + "px",
