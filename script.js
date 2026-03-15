@@ -381,26 +381,6 @@ function updateHero() {
     }
   }
 
-  // ✅ Daily progress bar
-  let doneToday  = u.completedToday.length;
-  let totalChores = chores.length;
-  let dailyBar   = document.getElementById("daily-progress-fill");
-  let dailyLabel = document.getElementById("daily-progress-label");
-
-  if (dailyBar && dailyLabel) {
-    if (totalChores === 0) {
-      dailyBar.style.width   = "0%";
-      dailyLabel.textContent = "Add some chores to get started!";
-    } else {
-      let pct = Math.round((doneToday / totalChores) * 100);
-      dailyBar.style.width   = pct + "%";
-      if (doneToday === totalChores) {
-        dailyLabel.textContent = "🎉 All done for today!";
-      } else {
-        dailyLabel.textContent = doneToday + " of " + totalChores + " chores done today";
-      }
-    }
-  }
 }
 
 
