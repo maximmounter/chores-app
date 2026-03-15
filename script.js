@@ -381,8 +381,8 @@ function updateHero() {
     }
   }
 
-  // 🎯 Monthly goal (30 pts)
-  const MONTHLY_GOAL = 30;
+  // 🎯 Monthly goal (50 pts)
+  const MONTHLY_GOAL = 50;
   let goalFill  = document.getElementById("goal-fill");
   let goalLabel = document.getElementById("goal-label");
   if (goalFill && goalLabel) {
