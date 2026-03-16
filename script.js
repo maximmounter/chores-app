@@ -544,7 +544,13 @@ function renderCalendar(year, month) {
     let key     = year + "-" + month + "-" + day;
     let entries = logByDay[key] || [];
     let isToday = isThisMonth && day === today.getDate();
-    let isPay   = day === payDay;
+    // Only show payday if it hasn't passed yet
+    let isPay = false;
+    if (day === payDay) {
+      let payDate   = new Date(year, month, payDay);
+      let todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      isPay = payDate >= todayDate;
+    }
 
     let cell = document.createElement("div");
     cell.className = "cal-day" +
