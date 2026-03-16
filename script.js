@@ -519,7 +519,7 @@ function renderCalendar(year, month) {
   let daysInMonth = new Date(year, month + 1, 0).getDate();
   let today       = new Date();
   let isThisMonth = (year === today.getFullYear() && month === today.getMonth());
-  let payDay      = 1; // 1st of every month
+  let payDay      = new Date(year, month + 1, 0).getDate(); // last day of the month
 
   let grid = document.getElementById("cal-grid");
   grid.innerHTML = "";
