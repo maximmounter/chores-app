@@ -138,7 +138,7 @@
     </div>
 
     <!-- ===== MONTHLY TALLY (active user) ===== -->
-    <div class="monthly-card">
+    <div class="monthly-card" onclick="openCalendar()" style="cursor:pointer;">
       <div class="monthly-top">
         <span class="monthly-label">THIS MONTH</span>
         <span class="monthly-month" id="monthly-month"></span>
@@ -204,6 +204,30 @@
 
     <p id="daily-reset-notice" style="display:none;"></p>
 
+  </div>
+
+  <!-- ===== CALENDAR PAGE ===== -->
+  <div class="modal-backdrop cal-backdrop" id="cal-backdrop">
+    <div class="cal-page">
+      <div class="cal-header">
+        <button class="cal-close" onclick="closeCalendar()">&#10005;</button>
+        <div class="cal-title" id="cal-title">Calendar</div>
+        <div class="cal-nav">
+          <button class="cal-nav-btn" id="cal-prev" onclick="calPrev()">&#8592;</button>
+          <span class="cal-month-label" id="cal-month-label"></span>
+          <button class="cal-nav-btn" id="cal-next" onclick="calNext()">&#8594;</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-legend">
+        <span class="cal-legend-item"><span class="cal-legend-dot"></span> Chore done</span>
+        <span class="cal-legend-item"><span class="cal-legend-pay">💰</span> Payday</span>
+      </div>
+      <div class="cal-detail" id="cal-detail" style="display:none;">
+        <div class="cal-detail-title" id="cal-detail-title"></div>
+        <div class="cal-detail-list" id="cal-detail-list"></div>
+      </div>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>

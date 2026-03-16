@@ -40,7 +40,7 @@ const USER_KEYS  = ["maxim", "maya"];
 const USER_NAMES = { maxim: "Maxim", maya: "Maya" };
 
 function defaultUserData() {
-  return { totalPoints:0, monthlyPoints:0, completedToday:[], lastDate:null, lastMonth:null, streak:0, lastStreakDate:null };
+  return { totalPoints:0, monthlyPoints:0, completedToday:[], lastDate:null, lastMonth:null, streak:0, lastStreakDate:null, choreLog:[] };
 }
 
 // In-memory state
@@ -292,11 +292,17 @@ function toggleChore(id) {
     u.completedToday = u.completedToday.filter(x => x !== id);
     u.totalPoints   -= chore.points;
     u.monthlyPoints -= chore.points;
+    // Remove the most recent log entry for this chore on today
+    if (!u.choreLog) u.choreLog = [];
+    let idx = u.choreLog.map((e,i)=>[e,i]).reverse().find(([e])=>e.date===today&&e.choreName===chore.name);
+    if (idx) u.choreLog.splice(idx[1], 1);
   } else {
     u.completedToday.push(id);
     u.totalPoints   += chore.points;
     u.monthlyPoints += chore.points;
     if (u.lastStreakDate !== today) { u.streak = (u.streak || 0) + 1; u.lastStreakDate = today; }
+    if (!u.choreLog) u.choreLog = [];
+    u.choreLog.push({ date: today, choreName: chore.name, points: chore.points });
   }
   saveUserData();
 }
@@ -460,4 +466,175 @@ function adminAdjust(userKey, direction) {
   document.getElementById("admin-" + userKey + "-total").textContent   = u.totalPoints;
   document.getElementById("admin-" + userKey + "-monthly").textContent = u.monthlyPoints;
   document.getElementById(inputId).value = "";
+}
+
+
+// =============================================
+// CALENDAR PAGE
+// =============================================
+
+function openCalendar() {
+  let u = userData[currentUser];
+  let viewYear  = now.getFullYear();
+  let viewMonth = now.getMonth(); // 0-indexed
+  renderCalendar(viewYear, viewMonth);
+  document.getElementById("cal-backdrop").classList.add("open");
+}
+
+function closeCalendar() {
+  document.getElementById("cal-backdrop").classList.remove("open");
+}
+
+// Store current calendar view state
+let calYear  = null;
+let calMonth = null;
+
+function renderCalendar(year, month) {
+  calYear  = year;
+  calMonth = month;
+
+  let u           = userData[currentUser];
+  let choreLog    = u.choreLog || [];
+  let monthNames  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let dayNames    = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  // Update header
+  document.getElementById("cal-title").textContent  = USER_NAMES[currentUser] + "'s Calendar";
+  document.getElementById("cal-month-label").textContent = monthNames[month] + " " + year;
+
+  // Build a set of dates that have log entries this month
+  // key: "YYYY-M-D" -> array of log entries
+  let logByDay = {};
+  choreLog.forEach(entry => {
+    let d = new Date(entry.date);
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      let key = year + "-" + month + "-" + d.getDate();
+      if (!logByDay[key]) logByDay[key] = [];
+      logByDay[key].push(entry);
+    }
+  });
+
+  // Build calendar grid
+  let firstDay   = new Date(year, month, 1).getDay(); // 0=Sun
+  let daysInMonth = new Date(year, month + 1, 0).getDate();
+  let today       = new Date();
+  let isThisMonth = (year === today.getFullYear() && month === today.getMonth());
+  let payDay      = 1; // 1st of every month
+
+  let grid = document.getElementById("cal-grid");
+  grid.innerHTML = "";
+
+  // Day name headers
+  dayNames.forEach(d => {
+    let cell = document.createElement("div");
+    cell.className = "cal-day-header";
+    cell.textContent = d;
+    grid.appendChild(cell);
+  });
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    let empty = document.createElement("div");
+    empty.className = "cal-day-empty";
+    grid.appendChild(empty);
+  }
+
+  // Day cells
+  for (let day = 1; day <= daysInMonth; day++) {
+    let key     = year + "-" + month + "-" + day;
+    let entries = logByDay[key] || [];
+    let isToday = isThisMonth && day === today.getDate();
+    let isPay   = day === payDay;
+
+    let cell = document.createElement("div");
+    cell.className = "cal-day" +
+      (isToday   ? " cal-today"   : "") +
+      (isPay     ? " cal-payday"  : "") +
+      (entries.length > 0 ? " cal-has-chores" : "");
+
+    let dayNum = document.createElement("span");
+    dayNum.className = "cal-day-num";
+    dayNum.textContent = day;
+    cell.appendChild(dayNum);
+
+    if (isPay) {
+      let badge = document.createElement("div");
+      badge.className = "cal-payday-badge";
+      badge.textContent = "💰";
+      cell.appendChild(badge);
+    }
+
+    if (entries.length > 0) {
+      let dot = document.createElement("div");
+      dot.className = "cal-chore-dot";
+      cell.appendChild(dot);
+    }
+
+    // Tap to see chore details
+    if (entries.length > 0 || isPay) {
+      cell.style.cursor = "pointer";
+      cell.onclick = () => showDayDetail(day, month, year, entries, isPay);
+    }
+
+    grid.appendChild(cell);
+  }
+
+  // Update prev/next button states
+  document.getElementById("cal-prev").disabled = false;
+  document.getElementById("cal-next").disabled = (year === today.getFullYear() && month === today.getMonth());
+}
+
+function calPrev() {
+  let m = calMonth - 1;
+  let y = calYear;
+  if (m < 0) { m = 11; y--; }
+  renderCalendar(y, m);
+  hideDayDetail();
+}
+
+function calNext() {
+  let m = calMonth + 1;
+  let y = calYear;
+  if (m > 11) { m = 0; y++; }
+  let t = new Date();
+  if (y > t.getFullYear() || (y === t.getFullYear() && m > t.getMonth())) return;
+  renderCalendar(y, m);
+  hideDayDetail();
+}
+
+function showDayDetail(day, month, year, entries, isPay) {
+  let monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let panel = document.getElementById("cal-detail");
+  let title = document.getElementById("cal-detail-title");
+  let list  = document.getElementById("cal-detail-list");
+
+  title.textContent = monthNames[month] + " " + day + ", " + year;
+  list.innerHTML = "";
+
+  if (isPay) {
+    let payItem = document.createElement("div");
+    payItem.className = "cal-detail-pay";
+    payItem.textContent = "💰 Payday! Points reset for the new month.";
+    list.appendChild(payItem);
+  }
+
+  if (entries.length === 0 && !isPay) {
+    let none = document.createElement("div");
+    none.className = "cal-detail-none";
+    none.textContent = "No chores logged this day.";
+    list.appendChild(none);
+  }
+
+  entries.forEach(e => {
+    let item = document.createElement("div");
+    item.className = "cal-detail-item";
+    item.innerHTML = `<span class="cal-detail-name">${e.choreName}</span><span class="cal-detail-pts">+${e.points} pts</span>`;
+    list.appendChild(item);
+  });
+
+  panel.style.display = "block";
+}
+
+function hideDayDetail() {
+  document.getElementById("cal-detail").style.display = "none";
 }
