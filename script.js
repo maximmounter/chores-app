@@ -589,6 +589,14 @@ function renderCalendar(year, month) {
     grid.appendChild(cell);
   }
 
+  // Monthly total for this user
+  let monthTotal = 0;
+  choreLog.forEach(entry => {
+    let d = new Date(entry.date);
+    if (d.getFullYear() === year && d.getMonth() === month) monthTotal += entry.points;
+  });
+  document.getElementById("cal-monthly-total-pts").textContent = monthTotal + " pts";
+
   // Update prev/next button states
   document.getElementById("cal-prev").disabled = false;
   document.getElementById("cal-next").disabled = (year === today.getFullYear() && month === today.getMonth());
