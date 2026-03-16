@@ -772,3 +772,224 @@ body {
   color: #ffffff;
   letter-spacing: 0.3px;
 }
+
+
+/* ======================
+   ADMIN + BUTTON
+   ====================== */
+.admin-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #1e1e1e;
+  background: #111111;
+  color: #ffffff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.admin-btn:hover {
+  background: #1a1a1a;
+  border-color: #2563eb;
+}
+
+
+/* ======================
+   MODAL BACKDROP
+   ====================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-box {
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-radius: 16px;
+  padding: 28px 24px;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+}
+
+.modal-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #2563eb;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+
+/* ======================
+   PIN ENTRY
+   ====================== */
+.pin-dots {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #374151;
+  background: transparent;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.pin-dot.filled {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.pin-error {
+  text-align: center;
+  color: #ef4444;
+  font-size: 0.78rem;
+  font-weight: 600;
+  min-height: 20px;
+  margin-bottom: 16px;
+}
+
+.pin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.pin-key {
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pin-key:hover {
+  background: #1a1a1a;
+}
+
+.pin-key:active {
+  background: #2563eb;
+}
+
+.pin-key-cancel {
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.pin-key-del {
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+
+/* ======================
+   ADMIN PANEL
+   ====================== */
+.admin-panel-box {
+  width: 340px;
+}
+
+.admin-user-section {
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.admin-user-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.admin-points-display {
+  font-size: 0.82rem;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-input {
+  width: 70px;
+  margin-bottom: 0;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+.btn-admin-give,
+.btn-admin-take {
+  flex: 1;
+  padding: 9px 6px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-admin-give {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-admin-take {
+  background: #1a1a1a;
+  border: 1px solid #374151;
+  color: #ef4444;
+}
+
+.btn-admin-give:hover,
+.btn-admin-take:hover {
+  opacity: 0.8;
+}
+
+.btn-admin-close {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #111111;
+  border: 1px solid #1e1e1e;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.btn-admin-close:hover {
+  border-color: #2563eb;
+}

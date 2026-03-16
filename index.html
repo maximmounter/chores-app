@@ -52,8 +52,73 @@
         <button class="user-btn" id="btn-maya"  onclick="switchUser('maya')">Maya</button>
       </div>
 
-      <div class="topbar-spacer"></div>
+      <button class="admin-btn" onclick="openAdminPin()">+</button>
     </header>
+
+  <!-- ===== PIN MODAL ===== -->
+  <div class="modal-backdrop" id="pin-backdrop">
+    <div class="modal-box" id="pin-modal">
+      <div class="modal-title">Parental PIN</div>
+      <div class="pin-dots">
+        <span class="pin-dot" id="dot-0"></span>
+        <span class="pin-dot" id="dot-1"></span>
+        <span class="pin-dot" id="dot-2"></span>
+        <span class="pin-dot" id="dot-3"></span>
+      </div>
+      <div id="pin-error" class="pin-error"></div>
+      <div class="pin-grid">
+        <button class="pin-key" onclick="pinPress('1')">1</button>
+        <button class="pin-key" onclick="pinPress('2')">2</button>
+        <button class="pin-key" onclick="pinPress('3')">3</button>
+        <button class="pin-key" onclick="pinPress('4')">4</button>
+        <button class="pin-key" onclick="pinPress('5')">5</button>
+        <button class="pin-key" onclick="pinPress('6')">6</button>
+        <button class="pin-key" onclick="pinPress('7')">7</button>
+        <button class="pin-key" onclick="pinPress('8')">8</button>
+        <button class="pin-key" onclick="pinPress('9')">9</button>
+        <button class="pin-key pin-key-cancel" onclick="closeAdminPin()">✕</button>
+        <button class="pin-key" onclick="pinPress('0')">0</button>
+        <button class="pin-key pin-key-del" onclick="pinDelete()">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN PANEL ===== -->
+  <div class="modal-backdrop" id="admin-backdrop">
+    <div class="modal-box admin-panel-box">
+      <div class="modal-title">Parent Controls</div>
+
+      <!-- Maxim section -->
+      <div class="admin-user-section">
+        <div class="admin-user-label">Maxim</div>
+        <div class="admin-points-display">
+          <span>Total: </span><span id="admin-maxim-total">0</span> pts &nbsp;|&nbsp;
+          <span>Month: </span><span id="admin-maxim-monthly">0</span> pts
+        </div>
+        <div class="admin-controls">
+          <input type="number" id="admin-maxim-amount" class="number-input admin-input" placeholder="pts" min="1" />
+          <button class="btn-admin-give" onclick="adminAdjust('maxim', 1)">+ Give</button>
+          <button class="btn-admin-take" onclick="adminAdjust('maxim', -1)">− Take</button>
+        </div>
+      </div>
+
+      <!-- Maya section -->
+      <div class="admin-user-section">
+        <div class="admin-user-label">Maya</div>
+        <div class="admin-points-display">
+          <span>Total: </span><span id="admin-maya-total">0</span> pts &nbsp;|&nbsp;
+          <span>Month: </span><span id="admin-maya-monthly">0</span> pts
+        </div>
+        <div class="admin-controls">
+          <input type="number" id="admin-maya-amount" class="number-input admin-input" placeholder="pts" min="1" />
+          <button class="btn-admin-give" onclick="adminAdjust('maya', 1)">+ Give</button>
+          <button class="btn-admin-take" onclick="adminAdjust('maya', -1)">− Take</button>
+        </div>
+      </div>
+
+      <button class="btn-admin-close" onclick="closeAdminPanel()">Done</button>
+    </div>
+  </div>
 
     <!-- ===== HERO =====
          Shows the active user's name, rank badge, total points, and progress. -->

@@ -364,3 +364,100 @@ function renderChores() {
 // =============================================
 document.getElementById("chore-name").addEventListener("keydown", e => { if (e.key === "Enter") addChore(); });
 USER_KEYS.forEach(k => { document.getElementById("btn-" + k).classList.toggle("active", k === currentUser); });
+
+
+// =============================================
+// ADMIN / PARENTAL PIN
+// =============================================
+const ADMIN_PIN = "6767";
+let pinEntry = "";
+
+function openAdminPin() {
+  pinEntry = "";
+  updatePinDots();
+  document.getElementById("pin-error").textContent = "";
+  document.getElementById("pin-backdrop").classList.add("open");
+}
+
+function closeAdminPin() {
+  pinEntry = "";
+  updatePinDots();
+  document.getElementById("pin-error").textContent = "";
+  document.getElementById("pin-backdrop").classList.remove("open");
+}
+
+function updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    let dot = document.getElementById("dot-" + i);
+    dot.classList.toggle("filled", i < pinEntry.length);
+  }
+}
+
+function pinPress(digit) {
+  if (pinEntry.length >= 4) return;
+  pinEntry += digit;
+  updatePinDots();
+  if (pinEntry.length === 4) {
+    setTimeout(() => {
+      if (pinEntry === ADMIN_PIN) {
+        closeAdminPin();
+        openAdminPanel();
+      } else {
+        document.getElementById("pin-error").textContent = "Incorrect PIN";
+        pinEntry = "";
+        updatePinDots();
+      }
+    }, 200);
+  }
+}
+
+function pinDelete() {
+  pinEntry = pinEntry.slice(0, -1);
+  updatePinDots();
+  document.getElementById("pin-error").textContent = "";
+}
+
+
+// =============================================
+// ADMIN PANEL
+// =============================================
+function openAdminPanel() {
+  // Refresh displayed points
+  document.getElementById("admin-maxim-total").textContent   = userData.maxim.totalPoints;
+  document.getElementById("admin-maxim-monthly").textContent = userData.maxim.monthlyPoints;
+  document.getElementById("admin-maya-total").textContent    = userData.maya.totalPoints;
+  document.getElementById("admin-maya-monthly").textContent  = userData.maya.monthlyPoints;
+  document.getElementById("admin-maxim-amount").value = "";
+  document.getElementById("admin-maya-amount").value  = "";
+  document.getElementById("admin-backdrop").classList.add("open");
+}
+
+function closeAdminPanel() {
+  document.getElementById("admin-backdrop").classList.remove("open");
+}
+
+// direction: 1 = give points, -1 = take points
+function adminAdjust(userKey, direction) {
+  let inputId = "admin-" + userKey + "-amount";
+  let amount  = parseInt(document.getElementById(inputId).value);
+
+  if (isNaN(amount) || amount < 1) {
+    alert("Please enter a valid number of points.");
+    return;
+  }
+
+  let u = userData[userKey];
+  u.totalPoints   += direction * amount;
+  u.monthlyPoints += direction * amount;
+
+  // Don't let points go below 0
+  if (u.totalPoints   < 0) u.totalPoints   = 0;
+  if (u.monthlyPoints < 0) u.monthlyPoints = 0;
+
+  saveUserData();
+
+  // Refresh the display inside the panel
+  document.getElementById("admin-" + userKey + "-total").textContent   = u.totalPoints;
+  document.getElementById("admin-" + userKey + "-monthly").textContent = u.monthlyPoints;
+  document.getElementById(inputId).value = "";
+}
