@@ -571,9 +571,13 @@ function renderCalendar(year, month) {
     }
 
     if (entries.length > 0) {
-      let dot = document.createElement("div");
-      dot.className = "cal-chore-dot";
-      cell.appendChild(dot);
+      entries.forEach(e => {
+        let row = document.createElement("div");
+        row.className = "cal-chore-row";
+        row.innerHTML = '<span class="cal-chore-row-name">' + e.choreName + '</span>' +
+                        '<span class="cal-chore-row-pts">+' + e.points + '</span>';
+        cell.appendChild(row);
+      });
     }
 
     // Tap to see chore details
