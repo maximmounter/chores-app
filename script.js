@@ -563,12 +563,7 @@ function renderCalendar(year, month) {
     dayNum.textContent = day;
     cell.appendChild(dayNum);
 
-    if (isPay) {
-      let badge = document.createElement("div");
-      badge.className = "cal-payday-badge";
-      badge.textContent = "💰";
-      cell.appendChild(badge);
-    }
+
 
     if (entries.length > 0) {
       entries.forEach(e => {
@@ -693,7 +688,7 @@ function showDayDetail(day, month, year, entries, isPay) {
   if (isPay) {
     let payItem = document.createElement("div");
     payItem.className = "cal-detail-pay";
-    payItem.textContent = "💰 Payday! Points reset for the new month.";
+    payItem.textContent = "Payday! Points reset for the new month.";
     list.appendChild(payItem);
   }
 
