@@ -1266,3 +1266,67 @@ body {
   letter-spacing: -1px;
   color: #ffffff;
 }
+
+/* ======================
+   CALENDAR SUGGESTIONS
+   ====================== */
+.cal-suggestions {
+  margin: 10px 12px 0;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-top: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.cal-suggestions-header {
+  margin-bottom: 10px;
+}
+
+.cal-suggestions-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #f59e0b;
+}
+
+.cal-suggest-intro {
+  font-size: 0.82rem;
+  color: #ffffff;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.cal-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid #111111;
+}
+
+.cal-suggest-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cal-suggest-date {
+  font-size: 0.72rem;
+  color: #9ca3af;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.cal-suggest-chore {
+  font-size: 0.82rem;
+  color: #ffffff;
+  font-weight: 500;
+  flex: 1;
+}
+
+.cal-suggest-pts {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #f59e0b;
+  flex-shrink: 0;
+}

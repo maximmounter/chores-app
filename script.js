@@ -600,6 +600,67 @@ function renderCalendar(year, month) {
   // Update prev/next button states
   document.getElementById("cal-prev").disabled = false;
   document.getElementById("cal-next").disabled = (year === today.getFullYear() && month === today.getMonth());
+
+  // =============================================
+  // SUGGESTIONS — only show for current month
+  // when there are fewer than 14 days until payday
+  // =============================================
+  let suggestEl = document.getElementById("cal-suggestions");
+  let isCurrentMonth = (year === today.getFullYear() && month === today.getMonth());
+  let lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+  let payDate        = new Date(year, month, lastDayOfMonth);
+  let todayDate      = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  let daysUntilPay   = Math.ceil((payDate - todayDate) / (1000 * 60 * 60 * 24));
+
+  if (!isCurrentMonth || daysUntilPay >= 14) {
+    suggestEl.style.display = "none";
+  } else {
+    suggestEl.style.display = "block";
+    const MONTHLY_GOAL  = 50;
+    let ptsNeeded       = Math.max(0, MONTHLY_GOAL - monthTotal);
+    let suggestList     = document.getElementById("cal-suggest-list");
+    let suggestIntro    = document.getElementById("cal-suggest-intro");
+    suggestList.innerHTML = "";
+
+    if (ptsNeeded === 0) {
+      suggestIntro.textContent = "🎉 You've hit your monthly goal! Great work!";
+    } else {
+      suggestIntro.textContent = "You need " + ptsNeeded + " more pts to hit your goal. Here's a plan:";
+
+      // Build list of remaining days from tomorrow to end of month
+      let suggestions = [];
+      let ptsLeft     = ptsNeeded;
+
+      for (let d = today.getDate() + 1; d <= lastDayOfMonth && ptsLeft > 0; d++) {
+        let date    = new Date(year, month, d);
+        let dayOfWk = date.getDay(); // 0=Sun, 5=Fri
+        let isFri   = dayOfWk === 5;
+        let label   = date.toLocaleDateString("default", { weekday:"short", month:"short", day:"numeric" });
+
+        if (isFri && ptsLeft > 0) {
+          suggestions.push({ label, chore: "Trash & Mail", pts: 5 });
+          ptsLeft -= 5;
+        } else if (ptsLeft > 0) {
+          suggestions.push({ label, chore: "Dishwasher Unload", pts: 2 });
+          ptsLeft -= 2;
+        }
+      }
+
+      if (ptsLeft > 0) {
+        // Still short — add remaining dishwasher days
+        suggestIntro.textContent += " (Do as many as you can — every point counts!)";
+      }
+
+      suggestions.forEach(s => {
+        let item = document.createElement("div");
+        item.className = "cal-suggest-item";
+        item.innerHTML = '<span class="cal-suggest-date">' + s.label + '</span>' +
+                         '<span class="cal-suggest-chore">' + s.chore + '</span>' +
+                         '<span class="cal-suggest-pts">+' + s.pts + ' pts</span>';
+        suggestList.appendChild(item);
+      });
+    }
+  }
 }
 
 function calPrev() {
