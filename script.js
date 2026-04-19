@@ -282,28 +282,48 @@ function addChore() {
 
 
 // =============================================
-// TOGGLE A CHORE
+// ADD ONE COMPLETION OF A CHORE
 // =============================================
-function toggleChore(id) {
+function addChoreCount(id) {
   let u     = userData[currentUser];
   let chore = chores.find(c => c.id === id);
   if (!chore) return;
-  if (u.completedToday.includes(id)) {
-    u.completedToday = u.completedToday.filter(x => x !== id);
-    u.totalPoints   -= chore.points;
-    u.monthlyPoints -= chore.points;
-    // Remove the most recent log entry for this chore on today
-    if (!u.choreLog) u.choreLog = [];
-    let idx = u.choreLog.map((e,i)=>[e,i]).reverse().find(([e])=>e.date===today&&e.choreName===chore.name);
-    if (idx) u.choreLog.splice(idx[1], 1);
-  } else {
-    u.completedToday.push(id);
-    u.totalPoints   += chore.points;
-    u.monthlyPoints += chore.points;
-    if (u.lastStreakDate !== today) { u.streak = (u.streak || 0) + 1; u.lastStreakDate = today; }
-    if (!u.choreLog) u.choreLog = [];
-    u.choreLog.push({ date: today, choreName: chore.name, points: chore.points });
-  }
+
+  // completedToday stores one entry per completion (allows duplicates)
+  if (!u.completedToday) u.completedToday = [];
+  u.completedToday.push(id);
+  u.totalPoints   += chore.points;
+  u.monthlyPoints += chore.points;
+
+  if (u.lastStreakDate !== today) { u.streak = (u.streak || 0) + 1; u.lastStreakDate = today; }
+  if (!u.choreLog) u.choreLog = [];
+  u.choreLog.push({ date: today, choreName: chore.name, points: chore.points });
+
+  saveUserData();
+}
+
+// =============================================
+// UNDO ONE COMPLETION OF A CHORE
+// =============================================
+function undoChoreCount(id) {
+  let u     = userData[currentUser];
+  let chore = chores.find(c => c.id === id);
+  if (!chore) return;
+
+  // Find and remove one instance of this id from completedToday
+  let idx = u.completedToday.lastIndexOf(id);
+  if (idx === -1) return; // nothing to undo
+  u.completedToday.splice(idx, 1);
+  u.totalPoints   -= chore.points;
+  u.monthlyPoints -= chore.points;
+  if (u.totalPoints   < 0) u.totalPoints   = 0;
+  if (u.monthlyPoints < 0) u.monthlyPoints = 0;
+
+  // Remove most recent log entry for this chore today
+  if (!u.choreLog) u.choreLog = [];
+  let logIdx = u.choreLog.map((e,i)=>[e,i]).reverse().find(([e])=>e.date===today&&e.choreName===chore.name);
+  if (logIdx) u.choreLog.splice(logIdx[1], 1);
+
   saveUserData();
 }
 
@@ -315,11 +335,14 @@ function deleteChore(id) {
   let chore = chores.find(c => c.id === id);
   if (!chore) return;
   USER_KEYS.forEach(key => {
-    let u = userData[key];
-    if (u.completedToday.includes(id)) {
+    let u     = userData[key];
+    let count = u.completedToday.filter(x => x === id).length;
+    if (count > 0) {
       u.completedToday = u.completedToday.filter(x => x !== id);
-      u.totalPoints   -= chore.points;
-      u.monthlyPoints -= chore.points;
+      u.totalPoints   -= chore.points * count;
+      u.monthlyPoints -= chore.points * count;
+      if (u.totalPoints   < 0) u.totalPoints   = 0;
+      if (u.monthlyPoints < 0) u.monthlyPoints = 0;
     }
   });
   chores = chores.filter(c => c.id !== id);
@@ -356,10 +379,19 @@ function renderChores() {
   if (chores.length === 0) { emptyMsg.style.display = "block"; return; }
   emptyMsg.style.display = "none";
   chores.forEach(chore => {
-    let isDone = u.completedToday.includes(chore.id);
-    let li = document.createElement("li");
-    li.className = "chore-item" + (isDone ? " done" : "");
-    li.innerHTML = `<input type="checkbox" class="chore-checkbox" ${isDone?"checked":""} onchange="toggleChore(${chore.id})"/><span class="chore-name">${chore.name}</span><span class="chore-points-badge">+${chore.points}</span><button class="btn-delete" onclick="deleteChore(${chore.id})">&#10005;</button>`;
+    let count = u.completedToday.filter(x => x === chore.id).length;
+    let li    = document.createElement("li");
+    li.className = "chore-item" + (count > 0 ? " done" : "");
+    li.innerHTML = `
+      <span class="chore-name">${chore.name}</span>
+      <span class="chore-points-badge">+${chore.points}</span>
+      <div class="chore-counter">
+        <button class="chore-counter-btn chore-minus" onclick="undoChoreCount(${chore.id})" ${count===0?"disabled":""}>−</button>
+        <span class="chore-counter-count">${count}</span>
+        <button class="chore-counter-btn chore-plus" onclick="addChoreCount(${chore.id})">+</button>
+      </div>
+      <button class="btn-delete" onclick="deleteChore(${chore.id})">&#10005;</button>
+    `;
     list.appendChild(li);
   });
 }

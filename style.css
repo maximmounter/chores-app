@@ -1338,3 +1338,58 @@ body {
   background: #f59e0b;
   flex-shrink: 0;
 }
+
+/* ======================
+   CHORE COUNTER (replaces checkbox)
+   ====================== */
+.chore-counter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.chore-counter-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #1e1e1e;
+  background: #111111;
+  color: #ffffff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  padding: 0;
+}
+
+.chore-plus {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.chore-plus:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.chore-minus:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.chore-minus:not(:disabled):hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.chore-counter-count {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 16px;
+  text-align: center;
+}
